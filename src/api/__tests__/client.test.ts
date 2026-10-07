@@ -7,7 +7,7 @@ describe('Shared Universal API Client', () => {
 
   it('handles successful API response', async () => {
     const mockData = { id: 1, name: 'Falda SuperApp' };
-    global.fetch = jest.fn().mockResolvedValue({
+    globalThis.fetch = jest.fn().mockResolvedValue({
       ok: true,
       status: 200,
       json: jest.fn().mockResolvedValue(mockData),
@@ -20,7 +20,7 @@ describe('Shared Universal API Client', () => {
   });
 
   it('handles HTTP error responses', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    globalThis.fetch = jest.fn().mockResolvedValue({
       ok: false,
       status: 404,
       json: jest.fn(),
@@ -33,7 +33,7 @@ describe('Shared Universal API Client', () => {
   });
 
   it('handles network failure', async () => {
-    global.fetch = jest.fn().mockRejectedValue(new Error('Network offline'));
+    globalThis.fetch = jest.fn().mockRejectedValue(new Error('Network offline'));
 
     const response = await fetchJson('https://api.example.com/fail');
     expect(response.status).toBe(0);

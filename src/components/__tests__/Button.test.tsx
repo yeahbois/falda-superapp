@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import { Button } from '../Button';
 
 describe('Universal Button Component', () => {
