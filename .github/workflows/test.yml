@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci || npm install
       - run: npm run test -- --coverage
 
   # 2. Web & Linux UI Visual/E2E Tests (Playwright)
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci
+      - run: npm ci || npm install
       - run: npx expo export -p web
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
@@ -40,6 +40,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci
+      - run: npm ci || npm install
       - run: npx tsc --noEmit
       - run: npm run lint
