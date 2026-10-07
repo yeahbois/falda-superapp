@@ -42,6 +42,12 @@ example
 /ios
 /android
 
+# coverage report
+coverage/
+
+# desktop build output
+desktop/src-tauri/target/
+
 #secrets
 .env.*
 .env
