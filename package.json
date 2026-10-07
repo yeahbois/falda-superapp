@@ -45,20 +45,18 @@
   },
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "export:web": "expo export -p web",
     "serve:web": "npx serve dist",
     "start:server": "node server.js",
-    "windows": "react-native run-windows",
-    "macos": "react-native run-macos",
     "desktop:dev": "npm run export:web && npm --prefix desktop run dev",
     "desktop:build": "npm run export:web && npm --prefix desktop run build",
     "desktop:linux": "npm run export:web && npm --prefix desktop run build -- --target x86_64-unknown-linux-gnu",
     "test": "jest",
     "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit",
     "lint": "expo lint"
   },
   "jest": {

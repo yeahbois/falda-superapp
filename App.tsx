@@ -1,10 +1,9 @@
 import React from 'react';
-import { HomeScreen } from './src/screens/HomeScreen';
+import HomeScreen from './src/app/index';
 
 /**
  * Universal Application Entrypoint
- * Used directly by React Native Windows, macOS, and standard React Native runners.
- * In Expo Router, src/app/_layout.tsx serves as the file-based route navigator.
+ * Standalone React Native runners targeting App.tsx now render the unified Expo Router home screen.
  */
 export default function App() {
   return <HomeScreen />;

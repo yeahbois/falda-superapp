@@ -1,4 +1,4 @@
-# Production Dockerfile for Expo Server (Node.js Dynamic Deployment)
+# Production Dockerfile for Falda SuperApp Web Hosting
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY . .
 
-# Export server bundle
+# Export static web bundle
 RUN npx expo export -p web
 
 FROM node:20-alpine AS runner
@@ -16,9 +16,6 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
-
-COPY package*.json ./
-RUN npm install --omit=dev express @expo/server
 
 COPY --from=builder /app/dist ./dist
 COPY server.js ./

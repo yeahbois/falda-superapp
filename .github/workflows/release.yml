@@ -5,10 +5,15 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   # JOB 1: Build iOS & Android via Expo Application Services (EAS Cloud)
+  # Runs only if EXPO_TOKEN secret is configured in repository settings
   build-mobile-expo:
     runs-on: ubuntu-latest
+    if: ${{ secrets.EXPO_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,44 +41,26 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
 
-  # JOB 3: Build Windows Native Executable (.msi)
-  build-windows-app:
-    runs-on: windows-latest
+  # JOB 3: Build Desktop Shell via Tauri Matrix (Linux, Windows, and macOS)
+  # Builds native desktop packages (.AppImage/.deb on Linux, .msi/.exe on Windows, .dmg/.app on macOS)
+  build-desktop-tauri:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-22.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci || npm install
-      - run: npx react-native run-windows --logging --release
-      - uses: actions/upload-artifact@v4
-        with:
-          name: windows-binary
-          path: windows/AppPackages/
-
-  # JOB 4: Build macOS Native Desktop App (.dmg)
-  build-macos-app:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: npm ci || npm install
-      - run: npx react-native run-macos --configuration Release
-      - uses: actions/upload-artifact@v4
-        with:
-          name: macos-binary
-          path: macos/Build/Products/Release/*.dmg
-
-  # JOB 5: Build Linux Native Binary (.AppImage / .deb via Tauri)
-  build-linux-app:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux GUI Dependencies for WebKitGTK & Tauri
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
       - run: npm ci || npm install
       - run: npx expo export -p web
       - uses: tauri-apps/tauri-action@v0
