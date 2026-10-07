@@ -1,0 +1,45 @@
+name: Continuous Integration & Automated Testing
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main ]
+
+jobs:
+  # 1. Unit & Component Integration Tests (Jest + React Native Testing Library)
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run test -- --coverage
+
+  # 2. Web & Linux UI Visual/E2E Tests (Playwright)
+  e2e-web-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx expo export -p web
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+
+  # 3. TypeScript Typecheck & Linter across all platform exports
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint

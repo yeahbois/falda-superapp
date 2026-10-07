@@ -1,0 +1,85 @@
+name: Build & Release 6-Platform Binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # JOB 1: Build iOS & Android via Expo Application Services (EAS Cloud)
+  build-mobile-expo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
+      - run: npx eas-cli build --platform all --non-interactive --no-wait
+
+  # JOB 2: Build Web Hosting Bundle
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx expo export -p web
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
+  # JOB 3: Build Windows Native Executable (.msi)
+  build-windows-app:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx react-native run-windows --logging --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-binary
+          path: windows/AppPackages/
+
+  # JOB 4: Build macOS Native Desktop App (.dmg)
+  build-macos-app:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx react-native run-macos --configuration Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-binary
+          path: macos/Build/Products/Release/*.dmg
+
+  # JOB 5: Build Linux Native Binary (.AppImage / .deb via Tauri)
+  build-linux-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx expo export -p web
+      - uses: tauri-apps/tauri-action@v0
+        with:
+          projectPath: "./desktop"
+          tagName: ${{ github.ref_name }}
+          releaseName: 'App Release ${{ github.ref_name }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

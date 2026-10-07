@@ -1,0 +1,13 @@
+{
+  "name": "desktop-shell",
+  "version": "1.0.0",
+  "description": "Cross-platform Desktop Shell using Tauri for Falda SuperApp",
+  "private": true,
+  "scripts": {
+    "dev": "npx @tauri-apps/cli dev",
+    "build": "npx @tauri-apps/cli build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.0"
+  }
+}
