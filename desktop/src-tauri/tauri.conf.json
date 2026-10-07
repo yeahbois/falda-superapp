@@ -1,39 +1,37 @@
 {
-  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/dev/tooling/cli/schema.json",
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "falda-superapp",
+  "version": "1.0.0",
+  "identifier": "com.falda.superapp",
   "build": {
-    "beforeDevCommand": "npm --prefix .. run export:web",
-    "beforeBuildCommand": "npm --prefix .. run export:web",
-    "devPath": "http://localhost:8081",
-    "distDir": "../../dist"
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "",
+    "devUrl": "http://localhost:8081",
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "falda-superapp",
-    "version": "1.0.0"
-  },
-  "tauri": {
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "com.falda.superapp",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ]
-    },
-    "security": {
-      "csp": null
-    },
+  "app": {
     "windows": [
       {
-        "title": "Falda SuperApp",
+        "title": "Falda Superapp",
         "width": 1280,
-        "height": 840,
+        "height": 800,
         "resizable": true,
         "fullscreen": false
       }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
     ]
   }
 }

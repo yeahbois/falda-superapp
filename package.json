@@ -47,6 +47,7 @@
     "web": "expo start --web",
     "export:web": "expo export -p web",
     "serve:web": "npx serve dist",
+    "start:server": "node server.js",
     "windows": "react-native run-windows",
     "macos": "react-native run-macos",
     "desktop:dev": "npm run export:web && npm --prefix desktop run dev",
