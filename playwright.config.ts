@@ -18,7 +18,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npx serve dist -p 8081',
+    command: 'npx --yes serve dist -p 8081',
     url: 'http://localhost:8081',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
